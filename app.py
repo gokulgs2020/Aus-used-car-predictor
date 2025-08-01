@@ -121,8 +121,8 @@ if st.button("Predict Price"):
     # 2. Set residual std dev (already in log space)
     residual_std = 0.213  
 
-    # 3. Z-score for 95% CI
-    z_score = norm.ppf(0.975)
+    # 3. Z-score for 90% CI
+    z_score = norm.ppf(0.95)
 
     # 4. Compute lower and upper bounds in log space
     lower_log = log_pred - z_score * residual_std
@@ -132,16 +132,16 @@ if st.button("Predict Price"):
     lower_price = np.exp(lower_log)
     upper_price = np.exp(upper_log)
 
-    # 6. Round to nearest 100 and convert to int
-    def round_to_100(x):
-        return int(round(x / 100.0) * 100)
+    # 6. Round to nearest 500 and convert to int
+    def round_to_500(x):
+        return int(round(x / 500.0) * 500)
 
-    lower_price_rounded = round_to_100(lower_price)
-    upper_price_rounded = round_to_100(upper_price)
+    lower_price_rounded = round_to_500(lower_price)
+    upper_price_rounded = round_to_500(upper_price)
 
     # Display
     st.markdown(
-    f"🔍 <span style='font-weight:bold; font-size:24px;'>Estimated Price Range (95% CI):</span><br>"
+    f"🔍 <span style='font-weight:bold; font-size:24px;'>Estimated Price Range (90% CI):</span><br>"
     f"<span style='font-weight:bold; font-size:28px; color:#2E8B57;'>${lower_price_rounded:,} - ${upper_price_rounded:,}</span>",
     unsafe_allow_html=True
 )
