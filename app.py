@@ -6,7 +6,7 @@ import pandas as pd
 from datetime import datetime
 
 # Load the trained model
-with open("rf_model.pkl", "rb") as f:
+with open("rf_lasso.pkl", "rb") as f:
     model = pickle.load(f)
 
 st.title("🚗 Car Price Predictor")
