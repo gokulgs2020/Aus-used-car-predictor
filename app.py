@@ -4,6 +4,7 @@ import streamlit as st
 import pickle
 import pandas as pd
 import numpy as np
+from scipy.stats import norm
 from datetime import datetime
 from brand_dict import brand_dict
 
@@ -123,18 +124,20 @@ if st.button("Predict Price"):
     residual_std = 0.213  
 
     # Convert to price space
-    lower_price = pred-1.64*np.exp(residual_std)
-    upper_price = pred+1.64*np.exp(residual_std)
 
-    # Round to nearest 500 and convert to int
-    def round_to_500(x):
-        return int(round(x / 500.0) * 500)
+    z_score=norm.ppf(0.975)
+    lower_price = pred-z_score*np.exp(residual_std)
+    upper_price = pred+z_score*np.exp(residual_std)
 
-    lower_price_rounded = round_to_500(lower_price)
-    upper_price_rounded = round_to_500(upper_price)
+    # Round to nearest 100 and convert to int
+    def round_to_100(x):
+        return int(round(x / 100.0) * 100)
+
+    lower_price_rounded = round_to_100(lower_price)
+    upper_price_rounded = round_to_100(upper_price)
 
     # Display
-    st.write(f"🔍 **Estimated Price Range (90% CI):** ${lower_price_rounded:,} - ${upper_price_rounded:,}")
+    st.write(f"🔍 **Estimated Price Range (95% CI):** ${lower_price_rounded:,} - ${upper_price_rounded:,}")
 
 
 
