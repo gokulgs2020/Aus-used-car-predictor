@@ -115,6 +115,6 @@ if st.button("Predict Price"):
 
     predicted_log_price = model.predict(input_df)[0]
     predicted_price = np.exp(predicted_log_price)
-    st.success(f"💰 Estimated Price: ${predicted_price:,.2f}")
+    st.success(f"💰 Estimated Price between ${predicted_price*0.9:,.0d} and ${predicted_price*1.1:,.0d} ")
 
 
