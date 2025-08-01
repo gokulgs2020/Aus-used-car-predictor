@@ -11,8 +11,8 @@ from brand_dict import brand_dict
 with open("rf_lasso.pkl", "rb") as f:
     model = pickle.load(f)
 
-st.title("🚗 Car Price Predictor")
-st.markdown("Fill in the details to get an estimated car price.")
+st.title("🚗 Australian Used Car Price Estimator")
+st.markdown("Kindly fill in the details to get an estimated car price.")
 
 # --- INPUTS ---
 # Basic inputs
