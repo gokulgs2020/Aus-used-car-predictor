@@ -98,11 +98,11 @@ if st.button("Predict Price"):
     lower_price = np.exp(log_pred) - z_score * np.exp(residual_std)
     upper_price = np.exp(log_pred) + z_score * np.exp(residual_std)
 
-    def round_to_100(x):
-        return int(round(x / 100.0) * 100)
+    def round_to_1000(x):
+        return int(round(x / 1000.0) * 1000)
 
-    lower_price_rounded = round_to_100(lower_price*0.9)
-    upper_price_rounded = round_to_100(upper_price*1.1)
+    lower_price_rounded = round_to_1000(lower_price*0.9)
+    upper_price_rounded = round_to_1000(upper_price*1.1)
 
     st.markdown(
         f"""
