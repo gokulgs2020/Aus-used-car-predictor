@@ -16,7 +16,7 @@ st.markdown("Fill in the details to get an estimated car price.")
 # --- INPUTS ---
 # Basic inputs
 kilometres = st.number_input("Kilometres Driven", min_value=0, value=50000)
-doors = st.selectbox("Number of Doors", [2, 3, 4, 5])
+# doors = st.selectbox("Number of Doors", [2, 3, 4, 5])
 seats = st.selectbox("Number of Seats", [2, 4, 5, 6, 7])
 fuel_eff = st.number_input("Fuel Consumption (L/100km)", min_value=1.0, value=8.0)
 
@@ -76,7 +76,6 @@ age_squared = (datetime.now().year - year) ** 2
 # --- BUILD INPUT ---
 input_data = {
     'Kilometres': kilometres,
-    'doors_int': doors,
     'seats_int': seats,
     'LitresPer100km': fuel_eff,
     'used_0_new_1': used_0_new_1,
