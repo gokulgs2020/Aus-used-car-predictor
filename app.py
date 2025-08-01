@@ -114,22 +114,25 @@ if st.button("Predict Price"):
     expected_features = model.feature_names_in_
     input_df = input_df.reindex(columns=expected_features, fill_value=0)
 
-    # Predict in log space
+
+    # 1. Predict in log space
     log_pred = model.predict(input_df)[0]
 
-    # Convert to price space
-    pred=np.exp(log_pred)
-
-    # Standard deviation of residuals in log-price space
+    # 2. Set residual std dev (already in log space)
     residual_std = 0.213  
 
-    # Convert to price space
+    # 3. Z-score for 95% CI
+    z_score = norm.ppf(0.975)
 
-    z_score=norm.ppf(0.975)
-    lower_price = pred-z_score*np.exp(residual_std)
-    upper_price = pred+z_score*np.exp(residual_std)
+    # 4. Compute lower and upper bounds in log space
+    lower_log = log_pred - z_score * residual_std
+    upper_log = log_pred + z_score * residual_std
 
-    # Round to nearest 100 and convert to int
+    # 5. Convert to price space
+    lower_price = np.exp(lower_log)
+    upper_price = np.exp(upper_log)
+
+    # 6. Round to nearest 100 and convert to int
     def round_to_100(x):
         return int(round(x / 100.0) * 100)
 
@@ -137,7 +140,12 @@ if st.button("Predict Price"):
     upper_price_rounded = round_to_100(upper_price)
 
     # Display
-    st.write(f"🔍 **Estimated Price Range (95% CI):** ${lower_price_rounded:,} - ${upper_price_rounded:,}")
+    st.markdown(
+    f"🔍 <span style='font-weight:bold; font-size:24px;'>Estimated Price Range (95% CI):</span><br>"
+    f"<span style='font-weight:bold; font-size:28px; color:#2E8B57;'>${lower_price_rounded:,} - ${upper_price_rounded:,}</span>",
+    unsafe_allow_html=True
+)
+
 
 
 
