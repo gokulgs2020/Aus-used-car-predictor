@@ -101,8 +101,8 @@ if st.button("Predict Price"):
     def round_to_100(x):
         return int(round(x / 100.0) * 100)
 
-    lower_price_rounded = round_to_100(lower_price)
-    upper_price_rounded = round_to_100(upper_price)
+    lower_price_rounded = round_to_100(lower_price*0.9)
+    upper_price_rounded = round_to_100(upper_price*1.1)
 
     st.markdown(
         f"""
