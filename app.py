@@ -4,6 +4,7 @@ import streamlit as st
 import pickle
 import pandas as pd
 from datetime import datetime
+from brand_dict import brand_dict
 
 # Load the trained model
 with open("rf_lasso.pkl", "rb") as f:
