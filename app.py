@@ -109,12 +109,33 @@ input_df = pd.DataFrame([input_data])
 
 # --- PREDICTION ---
 if st.button("Predict Price"):
-  
-    expected_features = model.feature_names_in_  # This is a NumPy array of expected column names
+    # Ensure input_df matches model's expected feature order
+    expected_features = model.feature_names_in_
     input_df = input_df.reindex(columns=expected_features, fill_value=0)
 
-    predicted_log_price = model.predict(input_df)[0]
-    predicted_price = np.exp(predicted_log_price)
-    st.success(f"💰 Estimated Price between ${predicted_price*0.9:,.0d} and ${predicted_price*1.1:,.0d} ")
+    # Predict in log space
+    log_pred = model.predict(input_df)[0]
+
+    # Assumed standard deviation of residuals in log-price space
+    residual_std = 0.30  # Replace with actual std if known
+
+    # Compute 90% confidence interval in log space
+    lower_log = log_pred - 1.64 * residual_std
+    upper_log = log_pred + 1.64 * residual_std
+
+    # Convert to price space
+    lower_price = np.exp(lower_log)
+    upper_price = np.exp(upper_log)
+
+    # Round to nearest 500 and convert to int
+    def round_to_500(x):
+        return int(round(x / 500.0) * 500)
+
+    lower_price_rounded = round_to_500(lower_price)
+    upper_price_rounded = round_to_500(upper_price)
+
+    # Display
+    st.write(f"🔍 **Estimated Price Range (90% CI):** ${lower_price_rounded:,} - ${upper_price_rounded:,}")
+
 
 
