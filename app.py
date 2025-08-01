@@ -116,16 +116,15 @@ if st.button("Predict Price"):
     # Predict in log space
     log_pred = model.predict(input_df)[0]
 
-    # Assumed standard deviation of residuals in log-price space
-    residual_std = 0.30  # Replace with actual std if known
+    # Convert to price space
+    pred=np.exp(log_pred)
 
-    # Compute 90% confidence interval in log space
-    lower_log = log_pred - 1.64 * residual_std
-    upper_log = log_pred + 1.64 * residual_std
+    # Standard deviation of residuals in log-price space
+    residual_std = 0.213  
 
     # Convert to price space
-    lower_price = np.exp(lower_log)
-    upper_price = np.exp(upper_log)
+    lower_price = pred-1.64*np.exp(residual_std)
+    upper_price = pred+1.64*np.exp(residual_std)
 
     # Round to nearest 500 and convert to int
     def round_to_500(x):
