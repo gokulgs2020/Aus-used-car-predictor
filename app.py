@@ -112,6 +112,8 @@ if st.button("Predict Price"):
     expected_features = model.feature_names_in_  # This is a NumPy array of expected column names
     input_df = input_df.reindex(columns=expected_features, fill_value=0)
 
-    prediction = model.predict(input_df)[0]
-    st.success(f"💰 Estimated Price: ${prediction:,.2f}")
+    predicted_log_price = model.predict(input_df)[0]
+    predicted_price = np.exp(predicted_log_price)
+    st.success(f"💰 Estimated Price: ${predicted_price:,.2f}")
+
 
