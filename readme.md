@@ -29,6 +29,7 @@ Lasso Regression
 Models have been saved using pickle and loaded in the app.
 
 📊 Sample Screenshot
+<img width="522" height="715" alt="image" src="https://github.com/user-attachments/assets/d80de2ab-d77d-44f5-ad71-2fd5d9474767" />
 
 
 🧠 Future Enhancements
