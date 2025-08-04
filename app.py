@@ -17,7 +17,7 @@ st.markdown("Kindly fill in the details to get an estimated car price.")
 # --- INPUTS ---
 kilometres = st.number_input("Kilometres Driven", min_value=0, value=50000)
 seats = st.selectbox("Number of Seats", [2, 5, 6, 7],index=1)
-fuel_eff = st.number_input("Fuel Consumption (L/100km)", min_value=1.0, value=8.0,step=1)
+fuel_eff = st.number_input("Fuel Consumption (L/100km)", min_value=1, value=8,step=1)
 
 car_condition = st.radio("Condition", ["Used", "New"])
 used_0_new_1 = 1 if car_condition == "New" else 0
