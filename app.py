@@ -83,8 +83,8 @@ input_data = {
     'Kilometres': kilometres,
     'doors_int': 5,  # Default value
     'seats_int': seats,
+    'used_0_new_1': 0,
     'LitresPer100km': fuel_eff,
-    'used_0_new_1': used_0_new_1,
     'transmission_auto': transmission_auto,
     'age_squared': age_squared
 }
