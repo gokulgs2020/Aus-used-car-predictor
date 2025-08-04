@@ -74,6 +74,10 @@ color_dict = {
     'color_silver': int(color == 'Silver'),
     'color_red': int(color == 'Red'),
 }
+
+# 8. Seats
+seats = st.selectbox("Number of Seats", [2, 5, 6, 7], index=1)
+
 # --- Data Preparation ---
 input_data = {
     'Kilometres': kilometres,
