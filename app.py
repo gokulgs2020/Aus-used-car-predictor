@@ -1,23 +1,32 @@
-
 import streamlit as st
 import pickle
 import pandas as pd
 import numpy as np
 from scipy.stats import norm
 from datetime import datetime
+import matplotlib.pyplot as plt
 from brand_dict import brand_dict
 
 # Load the trained model
 with open("rf_lasso.pkl", "rb") as f:
     model = pickle.load(f)
 
-st.title("🚗 Australian Used Car Price Estimator")
+# --- Sidebar ---
+st.sidebar.markdown("#### About")
+st.sidebar.markdown("""
+This app was built as part of a data science portfolio.  
+- **Author**: Gokul GS  
+- [GitHub Repo](https://github.com/gocool2002/Aus-used-car-predictor)  
+""")
+
+# --- App Header ---
+st.title("🚗 ML-Based Used Car Valuation Tool for the Australian Market")
 st.markdown("Kindly fill in the details to get an estimated car price.")
 
-# --- INPUTS ---
+# --- Inputs ---
 kilometres = st.number_input("Kilometres Driven", min_value=0, value=50000)
-seats = st.selectbox("Number of Seats", [2, 5, 6, 7],index=1)
-fuel_eff = st.number_input("Fuel Consumption (L/100km)", min_value=1, value=8,step=1)
+seats = st.selectbox("Number of Seats", [2, 5, 6, 7], index=1)
+fuel_eff = st.number_input("Fuel Consumption (L/100km)", min_value=1, value=8, step=1)
 
 car_condition = st.radio("Condition", ["Used", "New"])
 used_0_new_1 = 1 if car_condition == "New" else 0
@@ -61,8 +70,10 @@ brand_dummies[f'brand_cat_{brand_bucket}'] = 1
 year = st.slider("Year of Manufacture", min_value=1990, max_value=datetime.now().year, value=2018)
 age_squared = (datetime.now().year - year) ** 2
 
+# --- Data Preparation ---
 input_data = {
     'Kilometres': kilometres,
+    'doors_int': 5,  # Default value
     'seats_int': seats,
     'LitresPer100km': fuel_eff,
     'used_0_new_1': used_0_new_1,
@@ -87,6 +98,7 @@ for col in required_columns:
 
 input_df = pd.DataFrame([input_data])
 
+# --- Prediction ---
 if st.button("Predict Price"):
     expected_features = model.feature_names_in_
     input_df = input_df.reindex(columns=expected_features, fill_value=0)
@@ -95,15 +107,18 @@ if st.button("Predict Price"):
     residual_std = 0.213
     z_score = norm.ppf(0.95)
 
-    lower_price = np.exp(log_pred) - z_score * np.exp(residual_std)
-    upper_price = np.exp(log_pred) + z_score * np.exp(residual_std)
+    central_price = np.exp(log_pred)
+    lower_price = central_price - z_score * np.exp(residual_std)
+    upper_price = central_price + z_score * np.exp(residual_std)
 
     def round_to_1000(x):
         return int(round(x / 1000.0) * 1000)
 
-    lower_price_rounded = round_to_1000(lower_price*0.9)
-    upper_price_rounded = round_to_1000(upper_price*1.1)
+    central_price_rounded = round_to_1000(central_price)
+    lower_price_rounded = round_to_1000(lower_price * 0.9)
+    upper_price_rounded = round_to_1000(upper_price * 1.1)
 
+    st.markdown(f"**Predicted Price (Midpoint)**: ${central_price_rounded:,}")
     st.markdown(
         f"""
         <div style='font-family: "sans-serif";'>
@@ -115,3 +130,29 @@ if st.button("Predict Price"):
         """,
         unsafe_allow_html=True
     )
+
+    # Download button for input
+    csv = input_df.to_csv(index=False).encode('utf-8')
+    st.download_button("📥 Download Input Data", data=csv, file_name="input_features.csv", mime='text/csv')
+
+    # --- Feature Importance ---
+    importances = model.feature_importances_
+    features = model.feature_names_in_
+    sorted_idx = np.argsort(importances)[::-1][:5]
+
+    st.subheader("📊 Top 5 Features")
+    fig, ax = plt.subplots()
+    ax.barh(range(len(sorted_idx)), importances[sorted_idx][::-1], align='center')
+    ax.set_yticks(range(len(sorted_idx)))
+    ax.set_yticklabels([features[i] for i in sorted_idx][::-1])
+    ax.set_xlabel("Relative Importance")
+    st.pyplot(fig)
+
+# --- Model Info ---
+with st.expander("ℹ️ Model Info"):
+    st.markdown("""
+    - **Model**: Random Forest Regressor with Lasso feature selection  
+    - **R² Score**: 0.86 on test set  
+    - **Data**: Scraped from Australian car listing sites (pre-cleaned)  
+    - **Features**: Brand, year, fuel type, color, transmission, etc.  
+    """)
