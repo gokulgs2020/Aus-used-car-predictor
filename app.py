@@ -24,33 +24,8 @@ st.title("🚗 ML-Based Used Car Valuation Tool for the Australian Market")
 st.markdown("Kindly fill in the details to get an estimated car price.")
 
 # --- Inputs ---
-kilometres = st.number_input("Kilometres Driven", min_value=0, value=50000)
-seats = st.selectbox("Number of Seats", [2, 5, 6, 7], index=1)
-fuel_eff = st.number_input("Fuel Consumption (L/100km)", min_value=1, value=8, step=1)
 
-car_condition = st.radio("Condition", ["Used", "New"])
-used_0_new_1 = 1 if car_condition == "New" else 0
-
-transmission = st.radio("Transmission", ["Automatic", "Manual"])
-transmission_auto = 1 if transmission == "Automatic" else 0
-
-color = st.selectbox("Exterior Color", ["Black", "White", "Gray", "Silver", "Red", "Others"])
-color_dict = {
-    'color_black': int(color == 'Black'),
-    'color_white': int(color == 'White'),
-    'color_gray': int(color == 'Gray'),
-    'color_silver': int(color == 'Silver'),
-    'color_red': int(color == 'Red'),
-}
-
-fuel_type = st.selectbox("Fuel Type", ["Gasoline", "Diesel", "Electric", "Hybrid"])
-fuel_dict = {
-    'fuel_cat_Gasoline': int(fuel_type == 'Gasoline'),
-    'fuel_cat_Diesel': int(fuel_type == 'Diesel'),
-    'fuel_cat_Electric': int(fuel_type == 'Electric'),
-    'fuel_cat_Hybrid': int(fuel_type == 'Hybrid'),
-}
-
+# 1. Brand
 brand_bucket_map = {}
 for bucket, brands in brand_dict.items():
     for brand in brands:
@@ -67,9 +42,38 @@ brand_dummies = {
 }
 brand_dummies[f'brand_cat_{brand_bucket}'] = 1
 
+# 2. Year
 year = st.slider("Year of Manufacture", min_value=1990, max_value=datetime.now().year, value=2018)
 age_squared = (datetime.now().year - year) ** 2
 
+# 3. Kilometres
+kilometres = st.number_input("Kilometres Driven", min_value=0, value=50000, step=5000)
+
+# 4. Fuel Type
+fuel_type = st.selectbox("Fuel Type", ["Gasoline", "Diesel", "Electric", "Hybrid"])
+fuel_dict = {
+    'fuel_cat_Gasoline': int(fuel_type == 'Gasoline'),
+    'fuel_cat_Diesel': int(fuel_type == 'Diesel'),
+    'fuel_cat_Electric': int(fuel_type == 'Electric'),
+    'fuel_cat_Hybrid': int(fuel_type == 'Hybrid'),
+}
+
+# 5. Fuel Consumption
+fuel_eff = st.number_input("Fuel Consumption (L/100km)", min_value=1, value=8, step=1)
+
+# 6. Transmission
+transmission = st.radio("Transmission", ["Automatic", "Manual"])
+transmission_auto = 1 if transmission == "Automatic" else 0
+
+# 7. Color
+color = st.selectbox("Exterior Color", ["Black", "White", "Gray", "Silver", "Red", "Others"])
+color_dict = {
+    'color_black': int(color == 'Black'),
+    'color_white': int(color == 'White'),
+    'color_gray': int(color == 'Gray'),
+    'color_silver': int(color == 'Silver'),
+    'color_red': int(color == 'Red'),
+}
 # --- Data Preparation ---
 input_data = {
     'Kilometres': kilometres,
