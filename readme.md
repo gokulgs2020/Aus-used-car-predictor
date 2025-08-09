@@ -47,15 +47,16 @@ Metric	Value<br>
 -Dataset Size	45,000+ rows<br>
 
 Sample Prediction:<br>
-Toyota Corolla, 2018, 45,000 km, Gasoline, Automatic, Sydney → $18,500<br>
-Audi Q3, 2021, 25,000 km, Gasoline, Automatic, Sydney → $18,500<br>
+-Toyota Corolla, 2018, 45,000 km, Gasoline, Automatic, Sydney → $18,500<br>
+-Audi Q3, 2021, 25,000 km, Gasoline, Automatic, Sydney → $18,500<br>
 
 💡 Business Impact
 -Dealers: Price competitively, improve turnover.<br>
 -Buyers: Negotiate with confidence.<br>
 -Analysts: Track brand & regional trends.<br>
 
-🖼 Sample Screenshot
+🖼 Sample Screenshot<br>
+
 <img width="522" height="715" alt="image" src="https://github.com/user-attachments/assets/d80de2ab-d77d-44f5-ad71-2fd5d9474767" />
 
 🚀 Future Enhancements
