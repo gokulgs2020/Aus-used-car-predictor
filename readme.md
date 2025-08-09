@@ -13,7 +13,7 @@ Live Demo: Streamlit App
 Dataset: Kaggle – Australian Vehicle Prices
 
 🎯 Business Problem
-The Australian used car market is valued at $60B+ annually. There are many players in the used car market like carsales.com.au, ars24.com.au. 
+The Australian used car market is valued at $60B+ annually. There are many players in the used car market like carsales.com.au, ars24.com.au.\n
 Pricing the car right is crucial to ensure sales conversion. Used car prices are influenced by a bunch parameters that are internal and external
 -Internal (Car parameters) like the make (brand), model, fuel type, efficiency, transmission type etc., 
 -External parameters like regional demand vs supply, fuel subsidies and seasonal trends.
