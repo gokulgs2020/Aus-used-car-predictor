@@ -12,7 +12,8 @@ b.Dealerships → Set competitive yet profitable prices.
 Live Demo: Streamlit App
 Dataset: Kaggle – Australian Vehicle Prices
 
-🎯 Business Problem
+🎯 Business Problem<br>
+
 The Australian used car market is valued at $60B+ annually. There are many players in the used car market like carsales.com.au, ars24.com.au.<br>
 Pricing the car right is crucial to ensure sales conversion. Used car prices are influenced by a bunch parameters that are internal and external<br>
 -Internal (Car parameters) like the make (brand), model, fuel type, efficiency, transmission type etc., <br>
@@ -40,30 +41,30 @@ Solution: A data-driven model providing a platform or player agnostic brand & mo
 -Real-time prediction output<br>
 
 📊 Key Results
-Metric	Value
--R² Score	0.82
--MAE	$1,850
--Dataset Size	45,000+ rows
+Metric	Value<br>
+-R² Score	0.82<br>
+-MAE	$1,850<br>
+-Dataset Size	45,000+ rows<br>
 
-Sample Prediction:
-Toyota Corolla, 2018, 45,000 km, Petrol, Automatic, Sydney → $18,500
+Sample Prediction:<br>
+Toyota Corolla, 2018, 45,000 km, Gasoline, Automatic, Sydney → $18,500<br>
+Audi Q3, 2021, 25,000 km, Gasoline, Automatic, Sydney → $18,500<br>
 
 💡 Business Impact
--Dealers: Price competitively, improve turnover.
--Buyers: Negotiate with confidence.
--Analysts: Track brand & regional trends.
+-Dealers: Price competitively, improve turnover.<br>
+-Buyers: Negotiate with confidence.<br>
+-Analysts: Track brand & regional trends.<br>
 
 🖼 Sample Screenshot
 <img width="522" height="715" alt="image" src="https://github.com/user-attachments/assets/d80de2ab-d77d-44f5-ad71-2fd5d9474767" />
 
 🚀 Future Enhancements
--Compare multiple models in-app ✅
--Confidence intervals in predictions ✅
--Real-time listings scraping
--Seasonal trend adjustments
--Expansion to New Zealand market
--Batch file upload for bulk predictions
+-Compare multiple models in-app ✅<br>
+-Confidence intervals in predictions ✅<br>
+-Real-time listings scraping<br>
+-Seasonal trend adjustments<br>
+-Expansion to New Zealand market<br>
+-Batch file upload for bulk predictions<br>
 
-👨‍💻 Author
-Gokul GS
+👨‍💻 Author Gokul GS<br>
 LinkedIn | GitHub
