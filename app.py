@@ -120,7 +120,7 @@ st.metric(
 
 # Display data sources
 st.write(
-    "Source: Datium Insights – Moody’s Analytics Used Vehicle Price Index (May 2025), "
+    "\nSource: Datium Insights – Moody’s Analytics Used Vehicle Price Index (May 2025), "
     "[Economy.com] \n AADA April 2025 Used Vehicle Sales Report"
 )
 
