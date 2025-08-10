@@ -76,7 +76,7 @@ color_dict = {
 }
 
 # 8. Seats
-seats = st.selectbox("Number of Seats", [2, 5, 6, 7], index=1)
+seats = st.selectbox("Number of Seats", [5, 6, 7], index=1)
 
 # --- Data Preparation ---
 input_data = {
@@ -139,6 +139,29 @@ if st.button("Predict Price"):
         unsafe_allow_html=True
     )
 
+#-----------------------------------------------
+# Market data
+yoy_price_growth = 4.6  # YoY growth (%) for Australia’s Used Vehicle Price Index (May 2025)
+avg_days_to_sell = 49.7  # Average days to sell a used vehicle (April 2025)
+
+# Display metrics
+st.metric(
+    label="YoY Used Car Price Growth (May 2025)",
+    value=f"{yoy_price_growth:.1f}%",
+)
+st.metric(
+    label="Average Days to Sell a Used Vehicle (April 2025)",
+    value=f"{avg_days_to_sell:.1f} days",
+)
+
+# Display data sources
+st.write(
+    "Source: Datium Insights – Moody’s Analytics Used Vehicle Price Index (May 2025), "
+    "[Economy.com] and AADA April 2025 Used Vehicle Sales Report"
+)
+
+
+#----------------------------------------------------------------
     # Download button for input
     csv = input_df.to_csv(index=False).encode('utf-8')
     st.download_button("📥 Download Input Data", data=csv, file_name="input_features.csv", mime='text/csv')
@@ -160,7 +183,7 @@ if st.button("Predict Price"):
 with st.expander("ℹ️ Model Info"):
     st.markdown("""
     - **Model**: Random Forest Regressor with Lasso feature selection  
-    - **R² Score**: 0.86 on test set  
+    - **R² Score**: 0.88 on test set  
     - **Data**: Scraped from Australian car listing sites (pre-cleaned)  
     - **Features**: Brand, year, fuel type, color, transmission, etc.  
     """)
