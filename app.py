@@ -40,8 +40,8 @@ with col1:
 
 with col2:
     fuel_consumption = st.number_input("Fuel Consumption (L/100km)", min_value=1.0, max_value=30.0, value=8.0, step=0.1)
-    cylinders = st.selectbox("Cylinders", sorted(df['Cylinders'].dropna().unique()))
-    litres = st.number_input("Engine Size (Litres)", min_value=0.5, max_value=8.0, value=2.0, step=0.5)
+    cylinders = st.selectbox("Engine Cylinders Eg: **4** cylinders 2 Litres", sorted(df['cylinders'].dropna().unique()))
+    litres = st.number_input("Engine Litres Eg: 4 cylinders **2** Litres", min_value=0.5, max_value=8.0, value=2.0, step=0.5)
     color = st.selectbox("Color (Optional)", sorted(df['Color'].dropna().unique()), index=0, key="color")
     seats = st.number_input("Seats (Optional)", min_value=2, max_value=10, value=5, step=1, key="seats")
 
