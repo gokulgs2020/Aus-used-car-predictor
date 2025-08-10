@@ -163,6 +163,7 @@ st.write(
 
 #----------------------------------------------------------------
     # Download button for input
+if download_button:
     csv = input_df.to_csv(index=False).encode('utf-8')
     st.download_button("📥 Download Input Data", data=csv, file_name="input_features.csv", mime='text/csv')
 
