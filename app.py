@@ -34,13 +34,14 @@ with col1:
     brand = st.selectbox("Brand", sorted(valid_brands))
     model_choice = st.selectbox("Model", sorted(brand_model_mapping[brand]))
     year = st.number_input("Year of Manufacture", min_value=1980, max_value=2025, value=2015)
-    transmission = st.selectbox("Transmission", sorted(df['Transmission'].unique()))
-    fuel_type = st.selectbox("Fuel Type", sorted(df['fuel_bucket'].unique()))
-    kms = st.number_input("Kilometers Covered", min_value=0, max_value=1_000_000, value=50000)
+    kms = st.number_input("Kilometers Covered", min_value=1000, max_value=200000, value=50000)
+    transmission = st.selectbox("Transmission", ["Automatic", "Manual"],index=0])
+    
 
 with col2:
+    fuel_type = st.selectbox("Fuel Type", sorted(df['fuel_bucket'].unique()))
     fuel_consumption = st.number_input("Fuel Consumption (L/100km)", min_value=1.0, max_value=20.0, value=8.0, step=1)
-    cylinders = st.selectbox("Engine Cylinders Eg: Engine type - **4** cylinders - 2 Litres", sorted(df['cylinders'].dropna().unique()))
+    cylinders = st.selectbox("Engine Cylinders Eg: Engine type - **4** cylinders - 2 Litres", [2,4,6,8], index=1)
     litres = st.number_input("Engine Litres Eg: Engine type - 4 cylinders **2** Litres", min_value=0.5, max_value=8.0, value=2.0, step=0.5)
     color = st.selectbox("Exterior Color", ["Black", "White", "Gray", "Silver", "Red", "Others"])
     color_dict = {
@@ -50,7 +51,7 @@ with col2:
     	'color_silver': int(color == 'Silver'),
     	'color_red': int(color == 'Red'),
     }
-    seats = st.number_input("Seats (Optional)", [5,6,7], value=5, index=0)
+    seats = st.number_input("Seats (Optional)", [5,6,7], index=0)
 
 # Prepare features for prediction
 input_data = pd.DataFrame([{
