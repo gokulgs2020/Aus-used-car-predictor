@@ -6,139 +6,67 @@ from scipy.stats import norm
 from datetime import datetime
 import matplotlib.pyplot as plt
 from brand_dict import brand_dict
+import streamlit as st
+import pandas as pd
+import pickle
 
 # Load the trained model
 with open("rf_lasso.pkl", "rb") as f:
     model = pickle.load(f)
 
-# --- Sidebar ---
-st.sidebar.markdown("#### About")
-st.sidebar.markdown("""
-This app was built as part of a data science portfolio.  
-- **Author**: Gokul GS  
-- [GitHub Repo](https://github.com/gocool2002/Aus-used-car-predictor)  
-""")
+# Load dataset to get dropdown options
+df = pd.read_csv("car_data_cleaned.csv")
 
-# --- App Header ---
-st.title("🚗 ML-Based Used Car Valuation Tool for the Australian Market")
-st.markdown("Kindly fill in the details to get an estimated car price.")
+# Drop brands with < 50 rows
+brand_counts = df['Brand'].value_counts()
+valid_brands = brand_counts[brand_counts >= 50].index
+df = df[df['Brand'].isin(valid_brands)]
 
-# --- Inputs ---
+# Create brand → model mapping
+brand_model_mapping = df.groupby('Brand')['Model'].unique().apply(list).to_dict()
 
-# 1. Brand
-brand_bucket_map = {}
-for bucket, brands in brand_dict.items():
-    for brand in brands:
-        brand_bucket_map[brand] = bucket
+st.title("🚗 Car Price Prediction App")
 
-input_brand = st.selectbox("Select Brand", sorted(brand_bucket_map.keys()))
-brand_bucket = brand_bucket_map.get(input_brand, 'Economy')
+# Two columns for inputs
+col1, col2 = st.columns(2)
 
-brand_dummies = {
-    'brand_cat_Economy': 0,
-    'brand_cat_Premium': 0,
-    'brand_cat_Luxury': 0,
-    'brand_cat_Ultra Luxury': 0
-}
-brand_dummies[f'brand_cat_{brand_bucket}'] = 1
+with col1:
+    brand = st.selectbox("Brand", sorted(valid_brands))
+    model_choice = st.selectbox("Model", sorted(brand_model_mapping[brand]))
+    year = st.number_input("Year of Manufacture", min_value=1980, max_value=2025, value=2015)
+    transmission = st.selectbox("Transmission", sorted(df['Transmission'].unique()))
+    fuel_type = st.selectbox("Fuel Type", sorted(df['Fuel Type'].unique()))
+    kms = st.number_input("Kilometers Covered", min_value=0, max_value=1_000_000, value=50000)
 
-# 2. Year
-year = st.slider("Year of Manufacture", min_value=1990, max_value=datetime.now().year, value=2018)
-age_squared = (datetime.now().year - year) ** 2
+with col2:
+    fuel_consumption = st.number_input("Fuel Consumption (L/100km)", min_value=1.0, max_value=30.0, value=8.0, step=0.1)
+    cylinders = st.selectbox("Cylinders", sorted(df['Cylinders'].dropna().unique()))
+    litres = st.number_input("Engine Size (Litres)", min_value=0.5, max_value=8.0, value=2.0, step=0.5)
+    color = st.selectbox("Color (Optional)", sorted(df['Color'].dropna().unique()), index=0, key="color")
+    seats = st.number_input("Seats (Optional)", min_value=2, max_value=10, value=5, step=1, key="seats")
 
-# 3. Kilometres
-kilometres = st.number_input("Kilometres Driven", min_value=0, value=50000, step=5000)
+# Prepare features for prediction
+input_data = pd.DataFrame([{
+    "Brand": brand,
+    "Model": model_choice,
+    "Year of Manufacture": year,
+    "Transmission": transmission,
+    "Fuel Type": fuel_type,
+    "Kilometers covered": kms,
+    "Fuel Consumption": fuel_consumption,
+    "Cylinders": cylinders,
+    "Litres": litres,
+    "Color": color,
+    "Seats": seats
+}])
 
-# 4. Fuel Type
-fuel_type = st.selectbox("Fuel Type", ["Gasoline", "Diesel", "Electric", "Hybrid"])
-fuel_dict = {
-    'fuel_cat_Gasoline': int(fuel_type == 'Gasoline'),
-    'fuel_cat_Diesel': int(fuel_type == 'Diesel'),
-    'fuel_cat_Electric': int(fuel_type == 'Electric'),
-    'fuel_cat_Hybrid': int(fuel_type == 'Hybrid'),
-}
-
-# 5. Fuel Consumption
-fuel_eff = st.number_input("Fuel Consumption (L/100km)", min_value=1, value=8, step=1)
-
-# 6. Transmission
-transmission = st.radio("Transmission", ["Automatic", "Manual"])
-transmission_auto = 1 if transmission == "Automatic" else 0
-
-# 7. Color
-color = st.selectbox("Exterior Color", ["Black", "White", "Gray", "Silver", "Red", "Others"])
-color_dict = {
-    'color_black': int(color == 'Black'),
-    'color_white': int(color == 'White'),
-    'color_gray': int(color == 'Gray'),
-    'color_silver': int(color == 'Silver'),
-    'color_red': int(color == 'Red'),
-}
-
-# 8. Seats
-seats = st.selectbox("Number of Seats", [5, 6, 7], index=1)
-
-# --- Data Preparation ---
-input_data = {
-    'Kilometres': kilometres,
-    'doors_int': 5,  # Default value
-    'seats_int': seats,
-    'used_0_new_1': 0,
-    'LitresPer100km': fuel_eff,
-    'transmission_auto': transmission_auto,
-    'age_squared': age_squared
-}
-input_data.update(color_dict)
-input_data.update(fuel_dict)
-input_data.update(brand_dummies)
-
-required_columns = [
-    'Kilometres', 'doors_int', 'seats_int', 'LitresPer100km',
-    'used_0_new_1', 'transmission_auto', 'color_black', 'color_white',
-    'color_gray', 'color_silver', 'color_red', 'fuel_cat_Gasoline',
-    'fuel_cat_Diesel', 'fuel_cat_Electric', 'fuel_cat_Hybrid',
-    'brand_cat_Economy', 'brand_cat_Luxury', 'brand_cat_Premium',
-    'brand_cat_Ultra Luxury', 'age_squared'
-]
-
-for col in required_columns:
-    input_data[col] = input_data.get(col, 0)
-
-input_df = pd.DataFrame([input_data])
-
-# --- Prediction ---
+# Predict button
 if st.button("Predict Price"):
-    expected_features = model.feature_names_in_
-    input_df = input_df.reindex(columns=expected_features, fill_value=0)
-
-    log_pred = model.predict(input_df)[0]
-    residual_std = 0.213
-    z_score = norm.ppf(0.95)
-
-    central_price = np.exp(log_pred)
-    lower_price = central_price - z_score * np.exp(residual_std)
-    upper_price = central_price + z_score * np.exp(residual_std)
-
-    def round_to_1000(x):
-        return int(round(x / 1000.0) * 1000)
-
-    central_price_rounded = round_to_1000(central_price)
-    lower_price_rounded = round_to_1000(lower_price * 0.9)
-    upper_price_rounded = round_to_1000(upper_price * 1.1)
-
-    st.markdown(f"**Predicted Price (Midpoint)**: ${central_price_rounded:,}")
-    st.markdown(
-        f"""
-        <div style='font-family: "sans-serif";'>
-            <span style='font-weight: bold; font-size: 20px;'>🔍 Estimated Price Range (90% CI):</span><br>
-            <span style='color: #2E8B57; font-weight: 600; font-size: 28px;'>
-                ${lower_price_rounded:,} – ${upper_price_rounded:,}
-            </span>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
+    try:
+        price = model.predict(input_data)[0]
+        st.success(f"💰 Estimated Price: ${price:,.2f}")
+    except Exception as e:
+        st.error(f"Prediction error: {e}")
 
 #----------------------------------------------------------------
 
@@ -166,7 +94,13 @@ with st.expander("ℹ️ Model Info"):
 
 
 #-----------------------------------------------
-# Market data
+
+st.write("
+
+Market data shows slight increase in the YoY prices of used cars implying growing demand in Australia with the avg time for a sale about 7 weeks
+
+")
+
 yoy_price_growth = 4.6  # YoY growth (%) for Australia’s Used Vehicle Price Index (May 2025)
 avg_days_to_sell = 49.7  # Average days to sell a used vehicle (April 2025)
 
