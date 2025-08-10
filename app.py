@@ -95,11 +95,7 @@ with st.expander("ℹ️ Model Info"):
 
 #-----------------------------------------------
 
-st.write("
-
-Market data shows slight increase in the YoY prices of used cars implying growing demand in Australia with the avg time for a sale about 7 weeks
-
-")
+st.write("\n\nMarket data shows slight increase in the YoY prices of used cars implying growing demand in Australia with the avg time for a sale about 7 weeks\n")
 
 yoy_price_growth = 4.6  # YoY growth (%) for Australia’s Used Vehicle Price Index (May 2025)
 avg_days_to_sell = 49.7  # Average days to sell a used vehicle (April 2025)
@@ -117,6 +113,6 @@ st.metric(
 # Display data sources
 st.write(
     "Source: Datium Insights – Moody’s Analytics Used Vehicle Price Index (May 2025), "
-    "[Economy.com] and AADA April 2025 Used Vehicle Sales Report"
+    "[Economy.com] \n AADA April 2025 Used Vehicle Sales Report"
 )
 
