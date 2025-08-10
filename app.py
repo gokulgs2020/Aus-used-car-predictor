@@ -35,7 +35,7 @@ with col1:
     model_choice = st.selectbox("Model", sorted(brand_model_mapping[brand]))
     year = st.number_input("Year of Manufacture", min_value=1980, max_value=2025, value=2015)
     transmission = st.selectbox("Transmission", sorted(df['Transmission'].unique()))
-    fuel_type = st.selectbox("Fuel Type", sorted(df['Fuel Type'].unique()))
+    fuel_type = st.selectbox("Fuel Type", sorted(df['fuel_bucket'].unique()))
     kms = st.number_input("Kilometers Covered", min_value=0, max_value=1_000_000, value=50000)
 
 with col2:
