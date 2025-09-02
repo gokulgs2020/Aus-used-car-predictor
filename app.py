@@ -96,6 +96,7 @@ if st.button("Predict Price"):
     features = model.feature_names_in_
     sorted_idx = np.argsort(importances)[::-1][:5]
 
+with st.expander("ℹ️ Click to see the Top 5 Features determining the price of used cars")
     st.subheader("📊 Top 5 Features")
     fig, ax = plt.subplots()
     ax.barh(range(len(sorted_idx)), importances[sorted_idx][::-1], align='center')
@@ -116,7 +117,7 @@ with st.expander("ℹ️ Model Info"):
 
 #-----------------------------------------------
 
-st.write("\n\nMarket data shows slight increase in the YoY prices of used cars implying growing demand in Australia with the avg time for a sale about 7 weeks\n")
+st.write("\n\n\nMarket data shows slight increase in the YoY prices of used cars implying growing demand in Australia with the avg time for a sale about 7 weeks\n")
 
 yoy_price_growth = 4.6  # YoY growth (%) for Australia’s Used Vehicle Price Index (May 2025)
 avg_days_to_sell = 49.7  # Average days to sell a used vehicle (April 2025)
