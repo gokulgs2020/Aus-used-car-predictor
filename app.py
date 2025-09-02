@@ -51,7 +51,7 @@ with col2:
     	'color_silver': int(color == 'Silver'),
     	'color_red': int(color == 'Red'),
     }
-    seats = st.number_input("Seats (Optional)", [5,6,7], index=0)
+    seats = st.selectbox("Seats (Optional)", [5,6,7], index=0)
 
 # Prepare features for prediction
 input_data = pd.DataFrame([{
