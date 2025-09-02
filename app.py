@@ -40,7 +40,7 @@ with col1:
 
 with col2:
     fuel_type = st.selectbox("Fuel Type", sorted(df['fuel_bucket'].unique()))
-    fuel_consumption = st.number_input("Fuel Consumption (L/100km)", min_value=1.0, max_value=20.0, value=8.0, step=1)
+    fuel_consumption = st.number_input("Fuel Consumption (L/100km)", min_value=1.0, max_value=20.0, value=8.0, step=1.0)
     cylinders = st.selectbox("Engine Cylinders Eg: Engine type - **4** cylinders - 2 Litres", [2,4,6,8], index=1)
     litres = st.number_input("Engine Litres Eg: Engine type - 4 cylinders **2** Litres", min_value=0.5, max_value=8.0, value=2.0, step=0.5)
     color = st.selectbox("Exterior Color", ["Black", "White", "Gray", "Silver", "Red", "Others"])
