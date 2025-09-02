@@ -35,7 +35,7 @@ with col1:
     model_choice = st.selectbox("Model", sorted(brand_model_mapping[brand]))
     year = st.number_input("Year of Manufacture", min_value=1980, max_value=2025, value=2015)
     kms = st.number_input("Kilometers Covered", min_value=1000, max_value=200000, value=50000)
-    transmission = st.selectbox("Transmission", ["Automatic", "Manual"],index=0])
+    transmission = st.selectbox("Transmission", ["Automatic", "Manual"],index=0)
     
 
 with col2:
