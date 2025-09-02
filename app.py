@@ -6,6 +6,7 @@ from scipy.stats import norm
 from datetime import datetime
 import matplotlib.pyplot as plt
 from brand_dict import brand_dict
+from car_groups make_model_dict
 import streamlit as st
 import pandas as pd
 import pickle
@@ -55,17 +56,29 @@ with col2:
 
 # Prepare features for prediction
 input_data = pd.DataFrame([{
-    "Brand": brand,
-    "Model": model_choice,
-    "Year of Manufacture": year,
-    "Transmission": transmission,
-    "Fuel Type": fuel_type,
-    "Kilometers covered": kms,
-    "Fuel Consumption": fuel_consumption,
-    "Cylinders": cylinders,
-    "Litres": litres,
-    "Color": color,
-    "Seats": seats
+    "Kilometers covered": kms
+    "doors_int": 5    
+    "seats_int": seats,
+    "LitresPer100km": fuel_consumption,
+    "transmission_auto": 1 if transmission == "Automatic" else 0,
+    "color_black": int(color == "Black"),
+    "color_white": int(color == "White"),
+    "color_gray": int(color == "Gray"),
+    "color_silver": int(color == "Silver"),
+    "color_red": int(color == "Red"),
+    "fuel_cat_Gasoline": int(fuel_type == "Gasoline"),
+    "fuel_cat_Hybrid": int(fuel_type == "Hybrid"),
+    "brand_cat_Economy": int(brand in brand_dict["Economy"]),  # map your economy brands
+    "brand_cat_Luxury": int(brand in brand_dict["Luxury"]),   # map your luxury brands
+    "cylinders": cylinders,
+    "engine_l": litres,
+    "age_squared": (2025 - year)**2,  # or your age calculation
+    "Body_type_Other": int(body_type == "Other"),
+    "Body_type_SUV": int(body_type == "SUV"),
+    "Body_type_Sedan": int(body_type == "Sedan"),
+    "Body_type_Wagon": int(body_type == "Wagon"),
+    "Make_Model_cat_economy": int(model in make_model_dict["Economy"]),
+    "Make_Model_cat_premium": int(model in make_model_dict["Premium"])
 }])
 
 # Predict button
