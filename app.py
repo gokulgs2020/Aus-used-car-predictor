@@ -6,7 +6,7 @@ from scipy.stats import norm
 from datetime import datetime
 import matplotlib.pyplot as plt
 from brand_dict import brand_dict
-from car_groups make_model_dict
+from car_groups import make_model_dict
 import streamlit as st
 import pandas as pd
 import pickle
