@@ -26,7 +26,7 @@ df = df[df['Brand'].isin(valid_brands)]
 # Create brand → model mapping
 brand_model_mapping = df.groupby('Brand')['Model'].unique().apply(list).to_dict()
 
-st.title("🚗 Car Price Prediction App")
+st.title("🚗 Australian Used Car Price Prediction App")
 
 # Two columns for inputs
 col1, col2 = st.columns(2)
@@ -34,7 +34,7 @@ col1, col2 = st.columns(2)
 with col1:
     brand = st.selectbox("Brand", sorted(valid_brands))
     model_choice = st.selectbox("Model", sorted(brand_model_mapping[brand]))
-    year = st.number_input("Year of Manufacture", min_value=1980, max_value=2025, value=2015)
+    year = st.number_input("Year of Manufacture", min_value=1980, max_value=2025, value=2020)
     kms = st.number_input("Kilometers Covered", min_value=1000, max_value=200000, value=50000,step=5000)
     transmission = st.selectbox("Transmission", ["Automatic", "Manual"],index=0)
     body_type = st.selectbox("Select Body Type",["Sedan", "SUV", "Wagon", "Hatchback"])
