@@ -85,7 +85,7 @@ input_data = pd.DataFrame([{
 if st.button("Predict Price"):
     try:
         price = model.predict(input_data)[0]
-        st.success(f"💰 Estimated Price: ${price:,.2f}")
+        st.success(f"💰 Estimated Price: ${round(np.exp(price)/500,0)*500:,.0f}")
     except Exception as e:
         st.error(f"Prediction error: {e}")
 
