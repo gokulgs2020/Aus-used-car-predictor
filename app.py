@@ -93,9 +93,9 @@ if st.button("Predict Price"):
 
 
 # --- Feature Importance ---
-    importances = model.feature_importances_
-    features = np.array(model.feature_names_in_)  # Ensure it's a proper array
-    sorted_idx = np.argsort(importances)[-5:]
+importances = model.feature_importances_
+features = np.array(model.feature_names_in_)  # Ensure it's a proper array
+sorted_idx = np.argsort(importances)[-5:]
 
 with st.expander("ℹ️ Click to see the Top 5 Features determining the price of used cars"):
     st.subheader("📊 Top 5 Features")
