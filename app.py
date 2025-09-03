@@ -37,7 +37,7 @@ with col1:
     year = st.number_input("Year of Manufacture", min_value=1980, max_value=2025, value=2015)
     kms = st.number_input("Kilometers Covered", min_value=1000, max_value=200000, value=50000)
     transmission = st.selectbox("Transmission", ["Automatic", "Manual"],index=0)
-    
+    body_type = st.selectbox("Select Body Type",["Sedan", "SUV", "Wagon", "Hatchback"])
 
 with col2:
     fuel_type = st.selectbox("Fuel Type", sorted(df['fuel_bucket'].unique()))
