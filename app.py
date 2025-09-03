@@ -56,8 +56,8 @@ with col2:
 
 # Prepare features for prediction
 input_data = pd.DataFrame([{
-    "Kilometers covered": kms
-    "doors_int": 5    
+    "Kilometers covered": kms,
+    "doors_int": 5    ,
     "seats_int": seats,
     "LitresPer100km": fuel_consumption,
     "transmission_auto": 1 if transmission == "Automatic" else 0,
