@@ -91,18 +91,22 @@ if st.button("Predict Price"):
 
 #----------------------------------------------------------------
 
-    # --- Feature Importance ---
+   # --- Feature Importance ---
     importances = model.feature_importances_
     features = model.feature_names_in_
+    # Get indices of top 5 features
     sorted_idx = np.argsort(importances)[-5:]
 
 with st.expander("ℹ️ Click to see the Top 5 Features determining the price of used cars"):
     st.subheader("📊 Top 5 Features")
-    top_features = features[top_idx][::-1]
-    top_importances = importances[top_idx][::-1]
+    
+    # Reverse to show the most important on top
+    top_features = features[sorted_idx][::-1]
+    top_importances = importances[sorted_idx][::-1]
+
     fig, ax = plt.subplots()
     ax.barh(range(len(sorted_idx)), top_importances, align='center')
-    ax.set_yticks(range(len(top_idx)))
+    ax.set_yticks(range(len(sorted_idx)))
     ax.set_yticklabels(top_features)
     ax.set_xlabel("Relative Importance")
     st.pyplot(fig)
