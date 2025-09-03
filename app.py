@@ -73,7 +73,7 @@ input_data = pd.DataFrame([{
     "cylinders": cylinders,
     "engine_l": litres,
     "age_squared": (2025 - year)**2,  # or your age calculation
-    "Body_type_Other": int(body_type == "Other"),
+    "Body_type_Other": int(body_type not in ["Sedan", "SUV", "Wagon","Hatchback"]),
     "Body_type_SUV": int(body_type == "SUV"),
     "Body_type_Sedan": int(body_type == "Sedan"),
     "Body_type_Wagon": int(body_type == "Wagon"),
