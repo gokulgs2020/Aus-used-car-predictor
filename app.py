@@ -56,7 +56,7 @@ with col2:
 
 # Prepare features for prediction
 input_data = pd.DataFrame([{
-    "Kilometers covered": kms,
+    "Kilometres": kms,
     "doors_int": 5    ,
     "seats_int": seats,
     "LitresPer100km": fuel_consumption,
