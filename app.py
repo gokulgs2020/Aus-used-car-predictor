@@ -96,7 +96,7 @@ if st.button("Predict Price"):
     features = model.feature_names_in_
     sorted_idx = np.argsort(importances)[::-1][:5]
 
-with st.expander("ℹ️ Click to see the Top 5 Features determining the price of used cars")
+with st.expander("ℹ️ Click to see the Top 5 Features determining the price of used cars"):
     st.subheader("📊 Top 5 Features")
     fig, ax = plt.subplots()
     ax.barh(range(len(sorted_idx)), importances[sorted_idx][::-1], align='center')
