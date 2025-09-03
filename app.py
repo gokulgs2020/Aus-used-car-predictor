@@ -98,10 +98,12 @@ if st.button("Predict Price"):
 
 with st.expander("ℹ️ Click to see the Top 5 Features determining the price of used cars"):
     st.subheader("📊 Top 5 Features")
+    top_features = features[top_idx][::-1]
+    top_importances = importances[top_idx][::-1]
     fig, ax = plt.subplots()
-    ax.barh(range(len(sorted_idx)), importances[sorted_idx][::-1], align='center')
-    ax.set_yticks(range(len(sorted_idx)))
-    ax.set_yticklabels([features[i] for i in sorted_idx][::-1])
+    ax.barh(range(len(sorted_idx)), top_importances, align='center')
+    ax.set_yticks(range(len(top_idx)))
+    ax.set_yticklabels(top_features)
     ax.set_xlabel("Relative Importance")
     st.pyplot(fig)
 
