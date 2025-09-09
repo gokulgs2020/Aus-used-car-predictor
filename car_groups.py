@@ -1,5 +1,5 @@
 make_model_dict = {
-    "budget": [
+    "Budget": [
         "Ford Courier", "Ford Ecosport", "Ford Fairlane", "Ford Fairmont", "Ford Falcon",
         "Ford Festiva", "Ford Fiesta", "Ford Focus", "Ford Kuga", "Ford Laser",
         "Ford Maverick", "Ford Mondeo", "Ford Territory", "Holden Adventra", "Holden Astra",
@@ -20,7 +20,7 @@ make_model_dict = {
         "Toyota Celica", "Toyota Echo", "Toyota Prius", "Toyota Tarago", "Toyota Yaris",
         "Volkswagen Beetle", "Volkswagen CC", "Volkswagen EOS", "Volkswagen Jetta", "Volkswagen Polo"
     ],
-    "premium": [
+    "Premium": [
         "Ford Endura", "Ford Everest", "Ford Mustang", "Ford Ranger", "Ford Transit",
         "Holden Monaro", "Holden UTE", "Hyundai Ioniq", "Hyundai Staria", "Kia Carnival",
         "Kia Niro", "Kia Seltos", "Kia Stinger", "Mazda CX-30", "Mazda CX-8",
@@ -44,7 +44,7 @@ make_model_dict = {
         "Toyota Landcruiser", "Toyota RAV4", "Volkswagen Amarok", "Volkswagen Caravelle", "Volkswagen Multivan",
         "Volkswagen T-ROC", "Volkswagen Tiguan", "Volkswagen Touareg"
     ],
-    "economy": [
+    "Economy": [
         "Ford Escape", "Ford Puma", "Holden Acadia", "Holden Calais", "Holden Colorado",
         "Holden Equinox", "Holden Trailblazer", "Hyundai Genesis", "Hyundai I30", "Hyundai Iload",
         "Hyundai Imax", "Hyundai Kona", "Hyundai Santa", "Hyundai Sonata", "Hyundai Tucson",
@@ -58,7 +58,7 @@ make_model_dict = {
         "Toyota Hiace", "Toyota Prius-C", "Volkswagen Caddy", "Volkswagen Crafter", "Volkswagen Golf",
         "Volkswagen Passat", "Volkswagen Scirocco", "Volkswagen T-Cross", "Volkswagen Transporter"
     ],
-    "luxury": [
+    "Luxury": [
         "Ford F250", "Hyundai Palisade", "Kia EV6", "Mercedes-Benz C43", "Mercedes-Benz CLA",
         "Mercedes-Benz CLA35", "Mercedes-Benz E300", "Mercedes-Benz EQA", "Mercedes-Benz G350", "Mercedes-Benz GL63",
         "Mercedes-Benz GLA", "Mercedes-Benz GLA35", "Mercedes-Benz GLB", "Mercedes-Benz GLC", "Mercedes-Benz GLC300",
@@ -66,7 +66,7 @@ make_model_dict = {
         "Mercedes-Benz GLS350", "Mercedes-Benz GLS500", "Mercedes-Benz Marco", "Mercedes-Benz S65", "Mercedes-Benz SL55",
         "Mercedes-Benz SLC", "Nissan Z", "Toyota Supra", "Volkswagen Arteon"
     ],
-    "super_luxury": [
+    "Super_luxury": [
         "Holden HDT", "Mercedes-Benz AMG", "Mercedes-Benz C63", "Mercedes-Benz CLS53", "Mercedes-Benz E53",
         "Mercedes-Benz E63", "Mercedes-Benz EQB", "Mercedes-Benz EQC", "Mercedes-Benz EQS53", "Mercedes-Benz G63",
         "Mercedes-Benz GLC63", "Mercedes-Benz GLE", "Mercedes-Benz GLE63", "Mercedes-Benz GLS", "Mercedes-Benz Maybach",
