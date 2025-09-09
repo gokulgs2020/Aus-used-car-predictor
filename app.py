@@ -71,4 +71,73 @@ input_dict = {
     "brand_cat_Economy": int(brand in brand_dict.get("Economy", [])),
     "brand_cat_Luxury": int(brand in brand_dict.get("Luxury", [])),
     "brand_cat_Premium": int(brand in brand_dict.get("Premium", [])),
-    "brand_cat_Ultra Luxury": int
+    "brand_cat_Ultra Luxury": int(brand in brand_dict.get("Ultra Luxury", [])),
+    "cylinders": cylinders,
+    "engine_l": litres,
+    "age": 2025 - year,
+    "Body_type_Other": int(body_type not in ["Sedan", "SUV", "Wagon", "Hatchback"]),
+    "Body_type_SUV": int(body_type == "SUV"),
+    "Body_type_Sedan": int(body_type == "Sedan"),
+    "Body_type_Wagon": int(body_type == "Wagon"),
+    "used_0_new_1": int(used_new == "New"),
+    "Make_Model_cat_economy": int(model_choice in make_model_dict.get("Economy", [])),
+    "Make_Model_cat_premium": int(model_choice in make_model_dict.get("Premium", []))
+}
+
+input_data = pd.DataFrame([input_dict])
+
+# Ensure all features the model expects exist
+for col in feature_columns:
+    if col not in input_data.columns:
+        input_data[col] = 0
+
+# Reorder to match model
+input_data = input_data[feature_columns]
+
+# -----------------------------
+# Predict button
+# -----------------------------
+if st.button("Predict Price"):
+    try:
+        price = model.predict(input_data)[0]
+        st.success(f"💰 Estimated Price: ${round(price/500,0)*500:,.0f}")
+    except Exception as e:
+        st.error(f"Prediction error: {e}")
+
+# -----------------------------
+# Feature Importance
+# -----------------------------
+importances = model.feature_importances_
+features = np.array(model.feature_names_in_)
+sorted_idx = np.argsort(importances)[-5:]
+
+with st.expander("ℹ️ Top 5 Features determining car price"):
+    top_features = features[sorted_idx][::-1]
+    top_importances = importances[sorted_idx][::-1]
+
+    fig, ax = plt.subplots()
+    ax.barh(range(len(sorted_idx)), top_importances, align='center')
+    ax.set_yticks(range(len(sorted_idx)))
+    ax.set_yticklabels(top_features)
+    ax.set_xlabel("Relative Importance")
+    st.pyplot(fig)
+
+# -----------------------------
+# Model Info and Metrics
+# -----------------------------
+with st.expander("ℹ️ Model Info"):
+    st.markdown("""
+    - **Model**: Random Forest Regressor  
+    - **R² Score**: 0.79 on test set  
+    - **Data**: Scraped from Australian car listings  
+    - **Features**: Brand, year, fuel type, color, transmission, etc.  
+    """)
+
+# Market metrics
+yoy_price_growth = 4.6  # %
+avg_days_to_sell = 49.7  # days
+
+st.metric("YoY Used Car Price Growth (May 2025)", f"{yoy_price_growth:.1f}%")
+st.metric("Average Days to Sell a Used Vehicle (April 2025)", f"{avg_days_to_sell:.1f} days")
+
+st.write("\nSource: Datium Insights – Moody’s Analytics Used Vehicle Price Index (May 2025), [Economy.com]. AADA April 2025 Used Vehicle Sales Report")
