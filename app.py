@@ -12,21 +12,21 @@ import pandas as pd
 import pickle
 
 # Load the trained model
-with open("rf_lasso.pkl", "rb") as f:
+with open("best_model.pkl", "rb") as f:
     model = pickle.load(f)
 
 # Load dataset to get dropdown options
 df = pd.read_csv("car_data_cleaned.csv")
 
-# Drop brands with < 50 rows
+# Drop brands with < 100 rows
 brand_counts = df['Brand'].value_counts()
-valid_brands = brand_counts[brand_counts >= 50].index
+valid_brands = brand_counts[brand_counts >= 100].index
 df = df[df['Brand'].isin(valid_brands)]
 
 # Create brand → model mapping
 brand_model_mapping = df.groupby('Brand')['Model'].unique().apply(list).to_dict()
 
-st.title("🚗 Australian Used Car Price Prediction App")
+st.title("🚗 Ver 2 Australian Used Car Price Prediction App")
 
 # Two columns for inputs
 col1, col2 = st.columns(2)
