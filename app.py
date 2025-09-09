@@ -8,7 +8,7 @@ from brand_dict import brand_dict
 from car_groups import make_model_dict
 
 # -----------------------------
-# Load trained model and feature columns
+# Load trained model and features
 # -----------------------------
 with open("rf.pkl", "rb") as f:
     model = pickle.load(f)
@@ -48,12 +48,11 @@ with col2:
     litres = st.number_input("Engine Litres", min_value=1.0, max_value=4.0, value=2.0, step=0.5)
     color = st.selectbox("Exterior Color", ["Black", "White", "Gray", "Silver", "Red", "Others"])
     seats = st.selectbox("Seats (Optional)", [5, 6, 7], index=0)
-    used_new = st.selectbox("Car Condition", ["Used", "New"], index=0)
 
 # -----------------------------
 # Prepare input for prediction
 # -----------------------------
-input_dict = {
+input_data = pd.DataFrame([{
     "Kilometres": kms,
     "doors_int": 5,
     "seats_int": seats,
@@ -68,30 +67,28 @@ input_dict = {
     "fuel_cat_Hybrid": int(fuel_type == "Hybrid"),
     "fuel_cat_Diesel": int(fuel_type == "Diesel"),
     "fuel_cat_Electric": int(fuel_type == "Electric"),
-    "brand_cat_Economy": int(brand in brand_dict.get("Economy", [])),
-    "brand_cat_Luxury": int(brand in brand_dict.get("Luxury", [])),
+    "brand_cat_Economy": int(brand in brand_dict["Economy"]),
+    "brand_cat_Luxury": int(brand in brand_dict["Luxury"]),
     "brand_cat_Premium": int(brand in brand_dict.get("Premium", [])),
     "brand_cat_Ultra Luxury": int(brand in brand_dict.get("Ultra Luxury", [])),
     "cylinders": cylinders,
     "engine_l": litres,
-    "age": 2025 - year,
+    "age": 2025 - year,  # Use age instead of age_squared
     "Body_type_Other": int(body_type not in ["Sedan", "SUV", "Wagon", "Hatchback"]),
     "Body_type_SUV": int(body_type == "SUV"),
     "Body_type_Sedan": int(body_type == "Sedan"),
     "Body_type_Wagon": int(body_type == "Wagon"),
-    "used_0_new_1": int(used_new == "New"),
-    "Make_Model_cat_economy": int(model_choice in make_model_dict.get("Economy", [])),
-    "Make_Model_cat_premium": int(model_choice in make_model_dict.get("Premium", []))
-}
+    "used_0_new_1": 0,  # Modify if you have a Used/New input
+    "Make_Model_cat_economy": int(model_choice in make_model_dict["Economy"]),
+    "Make_Model_cat_premium": int(model_choice in make_model_dict["Premium"])
+}])
 
-input_data = pd.DataFrame([input_dict])
-
-# Ensure all features the model expects exist
+# Ensure all training columns exist
 for col in feature_columns:
     if col not in input_data.columns:
         input_data[col] = 0
 
-# Reorder to match model
+# Reorder columns to match training
 input_data = input_data[feature_columns]
 
 # -----------------------------
