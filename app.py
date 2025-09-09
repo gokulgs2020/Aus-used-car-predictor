@@ -10,7 +10,7 @@ from car_groups import make_model_dict
 # -----------------------------
 # Load trained model and features
 # -----------------------------
-with open("best_model.pkl", "rb") as f:
+with open("rf.pkl", "rb") as f:
     model = pickle.load(f)
 
 feature_columns = pickle.load(open("feature_columns.pkl", "rb"))
@@ -45,7 +45,7 @@ with col2:
     fuel_type = st.selectbox("Fuel Type", sorted(df['fuel_bucket'].unique()))
     fuel_consumption = st.number_input("Fuel Consumption (L/100km)", min_value=1, max_value=20, value=8, step=1)
     cylinders = st.selectbox("Engine Cylinders", [2, 4, 6, 8], index=1)
-    litres = st.number_input("Engine Litres", min_value=1, max_value=4, value=2, step=1)
+    litres = st.number_input("Engine Litres", min_value=1.0, max_value=4.0, value=2.0, step=0.5)
     color = st.selectbox("Exterior Color", ["Black", "White", "Gray", "Silver", "Red", "Others"])
     seats = st.selectbox("Seats (Optional)", [5, 6, 7], index=0)
 
@@ -125,7 +125,7 @@ with st.expander("ℹ️ Top 5 Features determining car price"):
 with st.expander("ℹ️ Model Info"):
     st.markdown("""
     - **Model**: Random Forest Regressor  
-    - **R² Score**: 0.88 on test set  
+    - **R² Score**: 0.79 on test set  
     - **Data**: Scraped from Australian car listings  
     - **Features**: Brand, year, fuel type, color, transmission, etc.  
     """)
