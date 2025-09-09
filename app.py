@@ -32,7 +32,7 @@ st.title("🚗 Ver 2 Australian Used Car Price Prediction App")
 col1, col2 = st.columns(2)
 
 with col1:
-    brand = st.selectbox("Car Brand", sorted(valid_brands),value="Mazda")
+    brand = st.selectbox("Car Brand", sorted(valid_brands))
     model_choice = st.selectbox("Car Model", sorted(brand_model_mapping[brand]))
     year = st.number_input("Year of Manufacture", min_value=1980, max_value=2025, value=2020)
     kms = st.number_input("Kilometers Covered", min_value=1000, max_value=200000, value=50000,step=5000)
