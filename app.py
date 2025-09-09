@@ -73,7 +73,7 @@ input_data = pd.DataFrame([{
     "brand_cat_Ultra Luxury": int(brand in brand_dict.get("Ultra Luxury", [])),
     "cylinders": cylinders,
     "engine_l": litres,
-    "age_squared": (2025 - year)**2,
+    "age": (2025 - year),
     "Body_type_Other": int(body_type not in ["Sedan", "SUV", "Wagon", "Hatchback"]),
     "Body_type_SUV": int(body_type == "SUV"),
     "Body_type_Sedan": int(body_type == "Sedan"),
@@ -97,7 +97,7 @@ input_data = input_data[feature_columns]
 if st.button("Predict Price"):
     try:
         price = model.predict(input_data)[0]
-        st.success(f"💰 Estimated Price: ${round(np.exp(price)/500,0)*500:,.0f}")
+        st.success(f"💰 Estimated Price: ${round(price/500,0)*500:,.0f}")
     except Exception as e:
         st.error(f"Prediction error: {e}")
 
