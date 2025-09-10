@@ -11,6 +11,43 @@ import streamlit as st
 import pandas as pd
 import pickle
 
+import base64
+from PIL import Image
+
+# --- Background image with 30% transparency ---
+def add_bg_with_opacity(image_file, opacity=0.3):
+    with open(image_file, "rb") as f:
+        encoded = base64.b64encode(f.read()).decode()
+    
+    st.markdown(
+        f"""
+        <style>
+        .stApp {{
+            position: relative;
+            background-image: url("data:image/png;base64,{encoded}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }}
+        .stApp::before {{
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(255, 255, 255, {1-opacity});
+            z-index: 0;
+        }}
+        .stApp .main {{
+            position: relative;
+            z-index: 1;  /* for widgets to be on top of overlay */
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+# Add background image
+add_bg_with_opacity("used_car_app_background.jpg", opacity=0.3)
+
 # Load the trained model
 with open("rf_lasso.pkl", "rb") as f:
     model = pickle.load(f)
