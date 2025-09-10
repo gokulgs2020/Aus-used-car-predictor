@@ -37,9 +37,9 @@ with col1:
     year = st.number_input("Year of Manufacture", min_value=1980, max_value=2025, value=2020)
     kms = st.number_input("Kilometers Covered", min_value=1000, max_value=200000, value=50000,step=5000)
     transmission = st.selectbox("Transmission", ["Automatic", "Manual"],index=0)
-    fuel_type = st.selectbox("Fuel Type", sorted(df['fuel_bucket'].unique()))
+    body_type = st.selectbox("Car Body Type", ["SUV", "Sedan","Hatchback","Wagon"],index=0)
 with col2:
-    
+    fuel_type = st.selectbox("Fuel Type", sorted(df['fuel_bucket'].unique()))
     fuel_consumption = st.number_input("Fuel Consumption (L/100km)", min_value=1, max_value=20, value=8, step=1)
     cylinders = st.selectbox("Engine Cylinders Eg: Engine type - **4** cylinders - 2 Litres", [2,4,6,8], index=1)
     litres = st.number_input("Engine Litres Eg: Engine type - 4 cylinders **2** Litres", min_value=1.0, max_value=4.0, value=2.0, step=0.5)
