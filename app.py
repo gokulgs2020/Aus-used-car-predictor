@@ -2,24 +2,18 @@ import streamlit as st
 import pickle
 import pandas as pd
 import numpy as np
-from datetime import datetime
 import matplotlib.pyplot as plt
-import base64
 from PIL import Image
-import requests
-from io import BytesIO
-
 from brand_dict import brand_dict
 from car_groups import make_model_dict
 
-# --- Background image with opacity from GitHub raw URL ---
-def add_bg_with_opacity_from_url(image_url, opacity=0.3):
-    response = requests.get(image_url)
-    img = Image.open(BytesIO(response.content))
-    buffered = BytesIO()
-    img.save(buffered, format="JPEG")
-    encoded = base64.b64encode(buffered.getvalue()).decode()
-
+# ----------------------------
+# --- Background image with opacity ---
+# ----------------------------
+def add_bg_with_opacity(image_file, opacity=0.3):
+    with open(image_file, "rb") as f:
+        encoded = base64.b64encode(f.read()).decode()
+    
     st.markdown(
         f"""
         <style>
@@ -39,22 +33,22 @@ def add_bg_with_opacity_from_url(image_url, opacity=0.3):
         }}
         .stApp .main {{
             position: relative;
-            z-index: 1;
+            z-index: 1;  /* ensures widgets are above overlay */
         }}
         </style>
         """,
         unsafe_allow_html=True
     )
 
-# GitHub raw URL
-bg_url = "https://raw.githubusercontent.com/gokulgs2020/Aus-used-car-predictor/main/used_car_app_background.jpg"
-add_bg_with_opacity_from_url(bg_url, opacity=0.3)
+# Apply background
+add_bg_with_opacity("used_car_app_background.jpg", opacity=0.3)
 
-# --- Load model ---
+# ----------------------------
+# --- Load model and dataset ---
+# ----------------------------
 with open("rf_lasso.pkl", "rb") as f:
     model = pickle.load(f)
 
-# --- Load dataset ---
 df = pd.read_csv("car_data_cleaned.csv")
 brand_counts = df['Brand'].value_counts()
 valid_brands = brand_counts[brand_counts >= 50].index
@@ -67,7 +61,9 @@ default_model = "Tucson"
 
 st.title("🚗 Australian Used Car Price Prediction App")
 
-# --- Inputs ---
+# ----------------------------
+# --- User Inputs ---
+# ----------------------------
 col1, col2 = st.columns(2)
 
 with col1:
@@ -76,7 +72,7 @@ with col1:
     year = st.number_input("Year of Manufacture", min_value=1980, max_value=2025, value=2023)
     kms = st.number_input("Kilometers Covered", min_value=1000, max_value=200000, value=25000, step=5000)
     transmission = st.selectbox("Transmission", ["Automatic", "Manual"], index=0)
-    body_type = st.selectbox("Car Body Type", ["SUV", "Sedan", "Hatchback", "Wagon"], index=0)
+    body_type = st.selectbox("Car Body Type", ["SUV", "Sedan","Hatchback","Wagon"], index=0)
 
 with col2:
     fuel_type = st.selectbox("Fuel Type", sorted(df['fuel_bucket'].unique()))
@@ -86,7 +82,9 @@ with col2:
     color = st.selectbox("Exterior Color", ["Black", "White", "Gray", "Silver", "Red", "Others"])
     seats = st.selectbox("Seats (Optional)", [5,6,7], index=0)
 
-# --- Prepare input features ---
+# ----------------------------
+# --- Prepare features ---
+# ----------------------------
 input_data = pd.DataFrame([{
     "Kilometres": kms,
     "doors_int": 5,
@@ -113,7 +111,9 @@ input_data = pd.DataFrame([{
     "Make_Model_cat_premium": int(model_choice in make_model_dict["Premium"])
 }])
 
+# ----------------------------
 # --- Prediction ---
+# ----------------------------
 if st.button("Predict Price"):
     try:
         price = model.predict(input_data)[0]
@@ -121,7 +121,9 @@ if st.button("Predict Price"):
     except Exception as e:
         st.error(f"Prediction error: {e}")
 
+# ----------------------------
 # --- Feature Importance ---
+# ----------------------------
 importances = model.feature_importances_
 features = np.array(model.feature_names_in_)
 sorted_idx = np.argsort(importances)[-5:]
@@ -137,7 +139,9 @@ with st.expander("ℹ️ Top 5 Features determining the price of used cars"):
     ax.set_xlabel("Relative Importance")
     st.pyplot(fig)
 
+# ----------------------------
 # --- Model Info ---
+# ----------------------------
 with st.expander("ℹ️ Model Info"):
     st.markdown("""
     - **Model**: Random Forest Regressor with Lasso feature selection  
@@ -146,7 +150,9 @@ with st.expander("ℹ️ Model Info"):
     - **Features**: Brand, year, fuel type, color, transmission, etc.  
     """)
 
+# ----------------------------
 # --- Market Data Metrics ---
+# ----------------------------
 st.write("\n\n\nMarket data shows slight increase in YoY prices of used cars in Australia (avg time for sale: 7 weeks)")
 yoy_price_growth = 4.6
 avg_days_to_sell = 49.7
