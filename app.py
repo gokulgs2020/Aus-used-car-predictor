@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from PIL import Image
 from brand_dict import brand_dict
 from car_groups import make_model_dict
+import base64
 
 # ----------------------------
 # --- Background image with opacity ---
