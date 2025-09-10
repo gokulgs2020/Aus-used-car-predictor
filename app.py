@@ -3,89 +3,83 @@ import pickle
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from PIL import Image
+import base64
 from brand_dict import brand_dict
 from car_groups import make_model_dict
-import base64
 
-# ----------------------------
-# --- Background image with opacity ---
-# ----------------------------
-def add_bg_with_opacity(image_file, opacity=0.3):
-    with open(image_file, "rb") as f:
-        encoded = base64.b64encode(f.read()).decode()
-    
+# ------------------- Background -------------------
+def set_background(local_file, opacity=0.3):
+    """
+    Set a local image as Streamlit background with transparency.
+    """
+    with open(local_file, "rb") as f:
+        img_bytes = f.read()
+        encoded = base64.b64encode(img_bytes).decode()
+
     st.markdown(
         f"""
         <style>
         .stApp {{
-            position: relative;
-            background-image: url("data:image/jpeg;base64,{encoded}");
+            background: linear-gradient(rgba(255,255,255,{1-opacity}), rgba(255,255,255,{1-opacity})),
+                        url("data:image/jpg;base64,{encoded}");
             background-size: cover;
             background-position: center;
-            background-repeat: no-repeat;
-        }}
-        .stApp::before {{
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(255, 255, 255, {1-opacity});
-            z-index: 0;
-        }}
-        .stApp .main {{
-            position: relative;
-            z-index: 1;  /* ensures widgets are above overlay */
         }}
         </style>
         """,
         unsafe_allow_html=True
     )
 
-# Apply background
-add_bg_with_opacity("used_car_app_background.jpg", opacity=0.3)
+# Set background image (make sure the file is in the same folder)
+set_background("used_car_app_background.jpg", opacity=0.3)
 
-# ----------------------------
-# --- Load model and dataset ---
-# ----------------------------
+# ------------------- Load Model and Data -------------------
 with open("rf_lasso.pkl", "rb") as f:
     model = pickle.load(f)
 
 df = pd.read_csv("car_data_cleaned.csv")
+
+# Filter brands with sufficient data
 brand_counts = df['Brand'].value_counts()
 valid_brands = brand_counts[brand_counts >= 50].index
 df = df[df['Brand'].isin(valid_brands)]
+
+# Brand -> Model mapping
 brand_model_mapping = df.groupby('Brand')['Model'].unique().apply(list).to_dict()
 
-# Default selections
 default_brand = "Hyundai"
 default_model = "Tucson"
 
 st.title("🚗 Australian Used Car Price Prediction App")
 
-# ----------------------------
-# --- User Inputs ---
-# ----------------------------
+# ------------------- User Inputs -------------------
 col1, col2 = st.columns(2)
 
 with col1:
-    brand = st.selectbox("Car Brand", sorted(valid_brands), index=sorted(valid_brands).index(default_brand))
-    model_choice = st.selectbox("Car Model", sorted(brand_model_mapping[brand]), index=sorted(brand_model_mapping[brand]).index(default_model))
+    brand = st.selectbox(
+        "Car Brand",
+        sorted(valid_brands),
+        index=sorted(valid_brands).index(default_brand)
+    )
+    model_choice = st.selectbox(
+        "Car Model",
+        sorted(brand_model_mapping[brand]),
+        index=sorted(brand_model_mapping[brand]).index(default_model)
+    )
     year = st.number_input("Year of Manufacture", min_value=1980, max_value=2025, value=2023)
     kms = st.number_input("Kilometers Covered", min_value=1000, max_value=200000, value=25000, step=5000)
     transmission = st.selectbox("Transmission", ["Automatic", "Manual"], index=0)
-    body_type = st.selectbox("Car Body Type", ["SUV", "Sedan","Hatchback","Wagon"], index=0)
+    body_type = st.selectbox("Car Body Type", ["SUV", "Sedan", "Hatchback", "Wagon"], index=0)
 
 with col2:
     fuel_type = st.selectbox("Fuel Type", sorted(df['fuel_bucket'].unique()))
     fuel_consumption = st.number_input("Fuel Consumption (L/100km)", min_value=1, max_value=20, value=8, step=1)
-    cylinders = st.selectbox("Engine Cylinders", [2,4,6,8], index=1)
+    cylinders = st.selectbox("Engine Cylinders", [2, 4, 6, 8], index=1)
     litres = st.number_input("Engine Litres", min_value=1.0, max_value=4.0, value=2.0, step=0.5)
     color = st.selectbox("Exterior Color", ["Black", "White", "Gray", "Silver", "Red", "Others"])
-    seats = st.selectbox("Seats (Optional)", [5,6,7], index=0)
+    seats = st.selectbox("Seats (Optional)", [5, 6, 7], index=0)
 
-# ----------------------------
-# --- Prepare features ---
-# ----------------------------
+# ------------------- Prepare Input -------------------
 input_data = pd.DataFrame([{
     "Kilometres": kms,
     "doors_int": 5,
@@ -104,7 +98,7 @@ input_data = pd.DataFrame([{
     "cylinders": cylinders,
     "engine_l": litres,
     "age_squared": (2025 - year)**2,
-    "Body_type_Other": int(body_type not in ["Sedan", "SUV", "Wagon","Hatchback"]),
+    "Body_type_Other": int(body_type not in ["Sedan", "SUV", "Wagon", "Hatchback"]),
     "Body_type_SUV": int(body_type == "SUV"),
     "Body_type_Sedan": int(body_type == "Sedan"),
     "Body_type_Wagon": int(body_type == "Wagon"),
@@ -112,9 +106,7 @@ input_data = pd.DataFrame([{
     "Make_Model_cat_premium": int(model_choice in make_model_dict["Premium"])
 }])
 
-# ----------------------------
-# --- Prediction ---
-# ----------------------------
+# ------------------- Prediction -------------------
 if st.button("Predict Price"):
     try:
         price = model.predict(input_data)[0]
@@ -122,17 +114,15 @@ if st.button("Predict Price"):
     except Exception as e:
         st.error(f"Prediction error: {e}")
 
-# ----------------------------
-# --- Feature Importance ---
-# ----------------------------
+# ------------------- Feature Importance -------------------
 importances = model.feature_importances_
 features = np.array(model.feature_names_in_)
 sorted_idx = np.argsort(importances)[-5:]
 
-with st.expander("ℹ️ Top 5 Features determining the price of used cars"):
-    st.subheader("📊 Top 5 Features")
+with st.expander("ℹ️ Top 5 Features Determining Price"):
     top_features = features[sorted_idx][::-1]
     top_importances = importances[sorted_idx][::-1]
+
     fig, ax = plt.subplots()
     ax.barh(range(len(sorted_idx)), top_importances, align='center')
     ax.set_yticks(range(len(sorted_idx)))
@@ -140,9 +130,7 @@ with st.expander("ℹ️ Top 5 Features determining the price of used cars"):
     ax.set_xlabel("Relative Importance")
     st.pyplot(fig)
 
-# ----------------------------
-# --- Model Info ---
-# ----------------------------
+# ------------------- Model Info -------------------
 with st.expander("ℹ️ Model Info"):
     st.markdown("""
     - **Model**: Random Forest Regressor with Lasso feature selection  
@@ -151,12 +139,16 @@ with st.expander("ℹ️ Model Info"):
     - **Features**: Brand, year, fuel type, color, transmission, etc.  
     """)
 
-# ----------------------------
-# --- Market Data Metrics ---
-# ----------------------------
-st.write("\n\n\nMarket data shows slight increase in YoY prices of used cars in Australia (avg time for sale: 7 weeks)")
-yoy_price_growth = 4.6
-avg_days_to_sell = 49.7
-st.metric("YoY Used Car Price Growth (May 2025)", f"{yoy_price_growth:.1f}%")
-st.metric("Average Days to Sell a Used Vehicle (April 2025)", f"{avg_days_to_sell:.1f} days")
-st.write("\nSource: Datium Insights – Moody’s Analytics Used Vehicle Price Index (May 2025), [Economy.com] \n AADA April 2025 Used Vehicle Sales Report")
+# ------------------- Market Insights -------------------
+st.write("\n\nMarket data shows slight increase in the YoY prices of used cars in Australia, with average sale time about 7 weeks.")
+
+yoy_price_growth = 4.6  # %
+avg_days_to_sell = 49.7  # days
+
+st.metric(label="YoY Used Car Price Growth (May 2025)", value=f"{yoy_price_growth:.1f}%")
+st.metric(label="Average Days to Sell a Used Vehicle (April 2025)", value=f"{avg_days_to_sell:.1f} days")
+
+st.write(
+    "\nSource: Datium Insights – Moody’s Analytics Used Vehicle Price Index (May 2025), "
+    "[Economy.com] \nAADA April 2025 Used Vehicle Sales Report"
+)
