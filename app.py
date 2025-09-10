@@ -32,18 +32,17 @@ st.title("🚗 Australian Used Car Price Prediction App")
 col1, col2 = st.columns(2)
 
 with col1:
-    brand = st.selectbox("Brand", sorted(valid_brands))
-    model_choice = st.selectbox("Model", sorted(brand_model_mapping[brand]))
+    brand = st.selectbox("Car Brand", sorted(valid_brands))
+    model_choice = st.selectbox("Car Model", sorted(brand_model_mapping[brand]))
     year = st.number_input("Year of Manufacture", min_value=1980, max_value=2025, value=2020)
     kms = st.number_input("Kilometers Covered", min_value=1000, max_value=200000, value=50000,step=5000)
     transmission = st.selectbox("Transmission", ["Automatic", "Manual"],index=0)
-    body_type = st.selectbox("Select Body Type",["Sedan", "SUV", "Wagon", "Hatchback"])
-
-with col2:
     fuel_type = st.selectbox("Fuel Type", sorted(df['fuel_bucket'].unique()))
+with col2:
+    
     fuel_consumption = st.number_input("Fuel Consumption (L/100km)", min_value=1, max_value=20, value=8, step=1)
     cylinders = st.selectbox("Engine Cylinders Eg: Engine type - **4** cylinders - 2 Litres", [2,4,6,8], index=1)
-    litres = st.number_input("Engine Litres Eg: Engine type - 4 cylinders **2** Litres", min_value=1, max_value=4, value=2, step=1)
+    litres = st.number_input("Engine Litres Eg: Engine type - 4 cylinders **2** Litres", min_value=1, max_value=4, value=2, step=0.5)
     color = st.selectbox("Exterior Color", ["Black", "White", "Gray", "Silver", "Red", "Others"])
     color_dict = {
    	'color_black': int(color == 'Black'),
