@@ -1,5 +1,6 @@
 brand_dict = {
-"Economy": ['Honda', 'Hyundai', 'Nissan', 'Holden', 'Suzuki'],
-"Luxury": ['Land', 'Mercedes-Benz', 'Audi', 'Isuzu', 'Lexus', 'Skoda', 'Porsche', 'GWM'],
-"Premium": ['Renault', 'Toyota', 'Volkswagen', 'BMW', 'Ford', 'Subaru', 'Mitsubishi', 'Jeep', 'Volvo', 'Mazda', 'Kia', 'Mini', 'MG', 'LDV']
+"Economy": ['Renault', 'Subaru', 'Mitsubishi', 'Mini', 'Suzuki', 'Isuzu', 'Skoda', 'MG', 'GWM'],
+"Luxury": ['Land', 'Toyota', 'Jeep'],
+"Premium": ['Honda', 'Volkswagen', 'Ford', 'Hyundai', 'Nissan', 'Volvo', 'Mazda', 'Kia', 'Holden', 'LDV'],
+"Ultra Luxury": ['Mercedes-Benz', 'Audi', 'Porsche','BMW','Lexus']
 }
